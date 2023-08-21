@@ -11,14 +11,14 @@ import Iconify from '../../../components/iconify';
 import axios from "../../../axios-instance";
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function SignUpForm() {
+  
   const navigate = useNavigate();
-
+  const [user_name, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [helperText, setHelperText] = useState('');
   const [errors, setErrors] = useState({});
-
   const [showPassword, setShowPassword] = useState(false);
 
   const handleEntryChange = (event: React.ChangeEvent<HTMLInputElement>) => {setHelperText('');};
@@ -31,7 +31,8 @@ export default function LoginForm() {
     
     if (Object.keys(errors).length === 0)
     {
-      axios.post("/auth/login", {
+      axios.post("/auth/signup", {
+        user_name,
         email,
         password,
       })
@@ -58,6 +59,7 @@ export default function LoginForm() {
   const validateForm = () => {
     const errors = {};
 
+    if (!user_name) errors.user_name = 'User Name is required.';
     if (!email) errors.email = 'Email is required.';
     else if (!/\S+@\S+\.\S+/.test(email)) errors.email = 'Email is invalid.';
 
@@ -70,6 +72,17 @@ export default function LoginForm() {
   return (
     <>
       <Stack spacing={3}>
+        <TextField
+          id="user_name"
+          name="user_name"
+          label="User Name"
+          value={user_name}
+          onInput={ e=>setUserName(e.target.value)}
+          onChange={handleEntryChange}
+          required
+        />
+        {errors.user_name && <span>{errors.user_name}</span>}
+        
         <TextField
           id="email"
           name="email"
@@ -112,7 +125,7 @@ export default function LoginForm() {
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-        Login
+        Sign Up
       </LoadingButton>
     </>
   );
