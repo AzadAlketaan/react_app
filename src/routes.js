@@ -3,7 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
-import BlogPage from './pages/BlogPage';
+import ArticlePage from './pages/ArticlePage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import Page404 from './pages/Page404';
@@ -20,7 +20,7 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <NewsfeedsPage /> },
         { path: 'newsfeeds', element: <NewsfeedsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'articles', element: <ArticlePage /> },
       ],
     },
     {

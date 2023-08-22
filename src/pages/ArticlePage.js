@@ -1,11 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography } from '@mui/material';
-// components
-import Iconify from '../components/iconify';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
+import { Grid, Container, Stack, Typography } from '@mui/material';
+
+import { ArticlePostCard, ArticlePostsSort, ArticlePostsSearch } from '../sections/@dashboard/articles';
 // mock
-import POSTS from '../_mock/blog';
+import POSTS from '../_mock/articles';
 
 // ----------------------------------------------------------------------
 
@@ -17,28 +16,28 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function BlogPage() {
+export default function ArticlePage() {
   return (
     <>
       <Helmet>
-        <title> Blog </title>
+        <title> Articles </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Blog
+            Explore Articles
           </Typography>
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <BlogPostsSearch posts={POSTS} />
-          <BlogPostsSort options={SORT_OPTIONS} />
+          <ArticlePostsSearch posts={POSTS} />
+          <ArticlePostsSort options={SORT_OPTIONS} />
         </Stack>
 
         <Grid container spacing={3}>
           {POSTS.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
+            <ArticlePostCard key={post.id} post={post} index={index} />
           ))}
         </Grid>
       </Container>
