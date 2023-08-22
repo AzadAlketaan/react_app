@@ -3,13 +3,13 @@ import { useState } from 'react';
 // @mui
 import { Container, Stack, Typography } from '@mui/material';
 // components
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import { NewsfeedSort, NewsfeedList, NewsfeedCartWidget, NewsfeedFilterSidebar } from '../sections/@dashboard/newsfeeds';
 // mock
-import PRODUCTS from '../_mock/products';
+import NEWSFEEDS from '../_mock/newsfeeds';
 
 // ----------------------------------------------------------------------
 
-export default function ProductsPage() {
+export default function NewsfeedsPage() {
   const [openFilter, setOpenFilter] = useState(false);
 
   const handleOpenFilter = () => {
@@ -23,27 +23,27 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Products | Minimal UI </title>
+        <title> News Feed </title>
       </Helmet>
 
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Products
+          Top headlines
         </Typography>
 
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <ProductFilterSidebar
+            <NewsfeedFilterSidebar
               openFilter={openFilter}
               onOpenFilter={handleOpenFilter}
               onCloseFilter={handleCloseFilter}
             />
-            <ProductSort />
+            <NewsfeedSort />
           </Stack>
         </Stack>
 
-        <ProductList products={PRODUCTS} />
-        <ProductCartWidget />
+        <NewsfeedList newsfeeds={NEWSFEEDS} />
+        <NewsfeedCartWidget />
       </Container>
     </>
   );

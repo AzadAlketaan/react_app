@@ -10,7 +10,7 @@ import { ColorPreview } from '../../../components/color-utils';
 
 // ----------------------------------------------------------------------
 
-const StyledProductImg = styled('img')({
+const StyledNewsfeedImg = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
@@ -20,12 +20,12 @@ const StyledProductImg = styled('img')({
 
 // ----------------------------------------------------------------------
 
-ShopProductCard.propTypes = {
-  product: PropTypes.object,
+NewsfeedCard.propTypes = {
+  newsfeed: PropTypes.object,
 };
 
-export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+export default function NewsfeedCard({ newsfeed }) {
+  const { name, cover, price, colors, status, priceSale } = newsfeed;
 
   return (
     <Card>
@@ -45,7 +45,7 @@ export default function ShopProductCard({ product }) {
             {status}
           </Label>
         )}
-        <StyledProductImg alt={name} src={cover} />
+        <StyledNewsfeedImg alt={name} src={cover} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
