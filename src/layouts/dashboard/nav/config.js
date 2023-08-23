@@ -15,7 +15,7 @@ const navConfig = [
     title: 'Explore Articles',
     path: '/dashboard/articles',
     icon: icon('ic_blog'),
-  }, 
+  },
 ];
 
 export default navConfig;

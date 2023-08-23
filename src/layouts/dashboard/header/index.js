@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import { RequireAuth } from 'react-auth-kit';
+
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
@@ -10,6 +12,8 @@ import Iconify from '../../../components/iconify';
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +46,7 @@ Header.propTypes = {
 };
 
 export default function Header({ onOpenNav }) {
+
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -68,7 +73,10 @@ export default function Header({ onOpenNav }) {
           }}
         >
           <LanguagePopover />
-          <AccountPopover />
+          <RequireAuth loginPath={'/login'}>
+            <AccountPopover />
+          </RequireAuth>
+          
         </Stack>
       </StyledToolbar>
     </StyledRoot>

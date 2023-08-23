@@ -1,16 +1,23 @@
+import React, { useState, useEffect } from "react";
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+
 // @mui
-import { Container, Stack, Typography } from '@mui/material';
+import { Pagination, Container, Stack, Typography } from '@mui/material';
 // components
 import { NewsfeedSort, NewsfeedList, NewsfeedCartWidget, NewsfeedFilterSidebar } from '../sections/@dashboard/newsfeeds';
-// mock
-import NEWSFEEDS from '../_mock/newsfeeds';
 
+import axios from "../axios-instance";
+import usePagination from "../utils/Pagination";
 // ----------------------------------------------------------------------
 
 export default function NewsfeedsPage() {
+
   const [openFilter, setOpenFilter] = useState(false);
+  const [NEWSFEEDS, setNewsFeeds] = useState([]);
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 24;
+  const count = Math.ceil(NEWSFEEDS.length / PER_PAGE);
+  const _DATA = usePagination(NEWSFEEDS, PER_PAGE);
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -18,6 +25,19 @@ export default function NewsfeedsPage() {
 
   const handleCloseFilter = () => {
     setOpenFilter(false);
+  };  
+
+  useEffect(() => {
+    const fetchNewsFeeds = async () => {
+      const { data } = await axios.get("/articles/newsFeed");
+      setNewsFeeds(data.data);
+    };
+    fetchNewsFeeds();
+  }, []);
+  
+  const handleChange = (e, p) => {
+    setPage(p);
+    _DATA.jump(p);
   };
 
   return (
@@ -41,10 +61,17 @@ export default function NewsfeedsPage() {
             <NewsfeedSort />
           </Stack>
         </Stack>
-
-        <NewsfeedList newsfeeds={NEWSFEEDS} />
+        <NewsfeedList newsfeeds={_DATA.currentData()} />
         <NewsfeedCartWidget />
-      </Container>
+        <Pagination
+          count={count}
+          size="large"
+          page={page}
+          variant="outlined"
+          shape="rounded"
+          onChange={handleChange}
+        />
+      </Container>    
     </>
   );
 }

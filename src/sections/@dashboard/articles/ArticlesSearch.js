@@ -14,24 +14,24 @@ const StyledPopper = styled((props) => <Popper placement="bottom-start" {...prop
 
 // ----------------------------------------------------------------------
 
-ArticlePostsSearch.propTypes = {
-  posts: PropTypes.array.isRequired,
+ArticlesSearch.propTypes = {
+  articles: PropTypes.array.isRequired,
 };
 
-export default function ArticlePostsSearch({ posts }) {
+export default function ArticlesSearch({ articles }) {
   return (
     <Autocomplete
       sx={{ width: 280 }}
       autoHighlight
       popupIcon={null}
       PopperComponent={StyledPopper}
-      options={posts}
-      getOptionLabel={(post) => post.title}
+      options={articles}
+      getOptionLabel={(article) => article.title}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search post..."
+          placeholder="Search..."
           InputProps={{
             ...params.InputProps,
             startAdornment: (

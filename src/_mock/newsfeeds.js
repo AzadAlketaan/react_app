@@ -50,7 +50,7 @@ const newsfeeds = [...Array(24)].map((_, index) => {
       (setIndex === 23 && NEWSFEED_COLOR.slice(4, 6)) ||
       (setIndex === 24 && NEWSFEED_COLOR.slice(5, 6)) ||
       NEWSFEED_COLOR,
-    status: sample(['sale', 'new', '', '']),
+    status: sample(['FOX NEWS', 'new', '', '']),
   };
 });
 

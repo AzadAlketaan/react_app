@@ -1,3 +1,3 @@
-export { default as ArticlePostCard } from './ArticlePostCard';
-export { default as ArticlePostsSearch } from './ArticlePostsSearch';
-export { default as ArticlePostsSort } from './ArticlePostsSort';
+export { default as ArticleCard } from './ArticleCard';
+export { default as ArticlesSearch } from './ArticlesSearch';
+export { default as ArticlesSort } from './ArticlesSort';

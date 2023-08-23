@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
+import { Box, CardActionArea, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// utils
-import { fCurrency } from '../../../utils/formatNumber';
 // components
 import Label from '../../../components/label';
-import { ColorPreview } from '../../../components/color-utils';
+// utils
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +13,7 @@ const StyledNewsfeedImg = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
-  objectFit: 'cover',
+  objectFit: 'image',
   position: 'absolute',
 });
 
@@ -25,15 +24,20 @@ NewsfeedCard.propTypes = {
 };
 
 export default function NewsfeedCard({ newsfeed }) {
-  const { name, cover, price, colors, status, priceSale } = newsfeed;
-
+  const noImage = '/assets/No_Image_Available.jpg';
+  const { image, title, url, source, author, createdAt } = newsfeed;
+  
   return (
     <Card>
-      <Box sx={{ pt: '100%', position: 'relative' }}>
-        {status && (
+      <CardActionArea
+        component="a"
+        href={url}
+      >
+        <Box sx={{ pt: '100%', position: 'relative' }}>
+        {source.name && (
           <Label
             variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
+            color={'info'}
             sx={{
               zIndex: 9,
               top: 16,
@@ -42,37 +46,33 @@ export default function NewsfeedCard({ newsfeed }) {
               textTransform: 'uppercase',
             }}
           >
-            {status}
+            {source.name}
           </Label>
         )}
-        <StyledNewsfeedImg alt={name} src={cover} />
-      </Box>
+          <StyledNewsfeedImg alt={title} src={image ?? noImage} 
+            onError={(e) => {e.target.src = noImage; e.target.onError = null;}}
+          />
+        </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link color="inherit" underline="hover">
-          <Typography variant="subtitle2" noWrap>
-            {name}
-          </Typography>
-        </Link>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
-          <Typography variant="subtitle1">
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{
-                color: 'text.disabled',
-                textDecoration: 'line-through',
-              }}
-            >
-              {priceSale && fCurrency(priceSale)}
+        <Stack spacing={2} sx={{ p: 3 }}>
+          <Link color="inherit" underline="hover">
+            <Typography variant="subtitle2" noWrap>
+              {title}
             </Typography>
-            &nbsp;
-            {fCurrency(price)}
-          </Typography>
+          </Link>
+
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+
+           <Typography variant="subtitle1">
+              &nbsp;
+              {author}
+            </Typography> 
+            <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+              {fDate(createdAt)}
+            </Typography>
+          </Stack>
         </Stack>
-      </Stack>
+      </CardActionArea>
     </Card>
   );
 }

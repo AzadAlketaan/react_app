@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-
+import { useSignIn } from 'react-auth-kit';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { FormHelperText, Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
@@ -14,6 +14,7 @@ import axios from "../../../axios-instance";
 export default function SignUpForm() {
   
   const navigate = useNavigate();
+  const signIn = useSignIn();
   const [user_name, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,6 +41,12 @@ export default function SignUpForm() {
       {
         if (res.data.status === 'success')
         {
+          signIn({
+            token: res.data.data.access_token,
+            expiresIn: 43200000,
+            tokenType: "Bearer",
+            authState: res.data.data.user
+        })
           // Redirect to the home page
           navigate('/dashboard', { replace: true });
         }

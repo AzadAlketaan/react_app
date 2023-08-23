@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -6,7 +7,6 @@ import {
   Stack,
   Button,
   Drawer,
-  Rating,
   Divider,
   Checkbox,
   FormGroup,
@@ -18,7 +18,7 @@ import {
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import { ColorMultiPicker } from '../../../components/color-utils';
+import axios from "../../../axios-instance";
 
 // ----------------------------------------------------------------------
 
@@ -27,24 +27,6 @@ export const SORT_BY_OPTIONS = [
   { value: 'newest', label: 'Newest' },
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' },
-];
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Kids'];
-export const FILTER_CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
-export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
-export const FILTER_PRICE_OPTIONS = [
-  { value: 'below', label: 'Below $25' },
-  { value: 'between', label: 'Between $25 - $75' },
-  { value: 'above', label: 'Above $75' },
-];
-export const FILTER_COLOR_OPTIONS = [
-  '#00AB55',
-  '#000000',
-  '#FFFFFF',
-  '#FFC0CB',
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
 ];
 
 // ----------------------------------------------------------------------
@@ -56,6 +38,26 @@ ShopFilterSidebar.propTypes = {
 };
 
 export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFilter }) {
+  
+  const [FILTER_SOURCE_OPTIONS, setSourceOptions] = useState([]);
+  const [FILTER_CATEGORY_OPTIONS, setCategoryOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchSourceOptions = async () => {
+      const { data } = await axios.get("/sources/");
+      setSourceOptions(data.data);
+    };
+    fetchSourceOptions();
+  }, []);
+  
+  useEffect(() => {
+    const fetchCategoryOptions = async () => {
+      const { data } = await axios.get("/categories/");
+      setCategoryOptions(data.data);
+    };
+    fetchCategoryOptions();
+  }, []);
+
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon="ic:round-filter-list" />} onClick={onOpenFilter}>
@@ -83,82 +85,28 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
-                Gender
-              </Typography>
-              <FormGroup>
-                {FILTER_GENDER_OPTIONS.map((item) => (
-                  <FormControlLabel key={item} control={<Checkbox />} label={item} />
-                ))}
-              </FormGroup>
-            </div>
-
-            <div>
+          <div>
               <Typography variant="subtitle1" gutterBottom>
                 Category
               </Typography>
               <RadioGroup>
                 {FILTER_CATEGORY_OPTIONS.map((item) => (
-                  <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
+                  <FormControlLabel key={item.id} value={item.name} control={<Radio />} label={item.name} />
                 ))}
               </RadioGroup>
             </div>
 
             <div>
               <Typography variant="subtitle1" gutterBottom>
-                Colors
+                Source
               </Typography>
-              <ColorMultiPicker
-                name="colors"
-                selected={[]}
-                colors={FILTER_COLOR_OPTIONS}
-                onChangeColor={(color) => [].includes(color)}
-                sx={{ maxWidth: 38 * 4 }}
-              />
-            </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
-                Price
-              </Typography>
-              <RadioGroup>
-                {FILTER_PRICE_OPTIONS.map((item) => (
-                  <FormControlLabel key={item.value} value={item.value} control={<Radio />} label={item.label} />
+              <FormGroup>
+                {FILTER_SOURCE_OPTIONS.map((item) => (
+                  <FormControlLabel key={item.id} control={<Checkbox />} label={item.name} />
                 ))}
-              </RadioGroup>
+              </FormGroup>
             </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
-                Rating
-              </Typography>
-              <RadioGroup>
-                {FILTER_RATING_OPTIONS.map((item, index) => (
-                  <FormControlLabel
-                    key={item}
-                    value={item}
-                    control={
-                      <Radio
-                        disableRipple
-                        color="default"
-                        icon={<Rating readOnly value={4 - index} />}
-                        checkedIcon={<Rating readOnly value={4 - index} />}
-                        sx={{
-                          '&:hover': { bgcolor: 'transparent' },
-                        }}
-                      />
-                    }
-                    label="& Up"
-                    sx={{
-                      my: 0.5,
-                      borderRadius: 1,
-                      '&:hover': { opacity: 0.48 },
-                    }}
-                  />
-                ))}
-              </RadioGroup>
-            </div>
+            
           </Stack>
         </Scrollbar>
 
