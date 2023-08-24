@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import {useAuthHeader } from 'react-auth-kit';
 import { Helmet } from 'react-helmet-async';
 
 // @mui
 import { Pagination, Container, Stack, Typography } from '@mui/material';
 // components
-import { NewsfeedSort, NewsfeedList, NewsfeedCartWidget, NewsfeedFilterSidebar } from '../sections/@dashboard/newsfeeds';
+import { NewsfeedSort, NewsfeedList, NewsfeedCartWidget } from '../sections/@dashboard/newsfeeds';
 
 import axios from "../axios-instance";
 import usePagination from "../utils/Pagination";
@@ -12,32 +13,31 @@ import usePagination from "../utils/Pagination";
 
 export default function NewsfeedsPage() {
 
-  const [openFilter, setOpenFilter] = useState(false);
+  const authHeader = useAuthHeader();
   const [NEWSFEEDS, setNewsFeeds] = useState([]);
-  const [page, setPage] = useState(1);
-  const PER_PAGE = 24;
-  const count = Math.ceil(NEWSFEEDS.length / PER_PAGE);
-  const _DATA = usePagination(NEWSFEEDS, PER_PAGE);
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
+  const [PAGE, setPage] = useState(1);
+  const [LastPage, setLastPage] = useState(1);
+  const PER_PAGE = 10;
+  
+  const fetchNewsFeeds = async () => {
+    const { data } = await axios.get(`/articles/newsFeed`,
+    { headers: {"Authorization" : authHeader()},
+    params:
+    {
+      limit: PER_PAGE,
+      page: PAGE
+    }}
+    );
+    setNewsFeeds(data.data.articles);
+    setLastPage(data.data.lastPage);
   };
 
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };  
-
   useEffect(() => {
-    const fetchNewsFeeds = async () => {
-      const { data } = await axios.get("/articles/newsFeed");
-      setNewsFeeds(data.data);
-    };
     fetchNewsFeeds();
-  }, []);
+  }, [PAGE]);
   
   const handleChange = (e, p) => {
     setPage(p);
-    _DATA.jump(p);
   };
 
   return (
@@ -50,23 +50,13 @@ export default function NewsfeedsPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Top headlines
         </Typography>
-
-        <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <NewsfeedFilterSidebar
-              openFilter={openFilter}
-              onOpenFilter={handleOpenFilter}
-              onCloseFilter={handleCloseFilter}
-            />
-            <NewsfeedSort />
-          </Stack>
-        </Stack>
-        <NewsfeedList newsfeeds={_DATA.currentData()} />
+                
+        <NewsfeedList newsfeeds={NEWSFEEDS} />
         <NewsfeedCartWidget />
         <Pagination
-          count={count}
+          count={LastPage}
           size="large"
-          page={page}
+          page={PAGE}
           variant="outlined"
           shape="rounded"
           onChange={handleChange}

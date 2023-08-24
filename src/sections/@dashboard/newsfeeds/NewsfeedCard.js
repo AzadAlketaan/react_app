@@ -65,7 +65,7 @@ export default function NewsfeedCard({ newsfeed }) {
 
            <Typography variant="subtitle1">
               &nbsp;
-              {author}
+              {author?.name}
             </Typography> 
             <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
               {fDate(createdAt)}

@@ -161,7 +161,7 @@ export default function ArticleCard({ article, index }) {
                     }),
                   }}
                 >
-                <Typography variant="caption">{author}</Typography>
+                <Typography variant="caption">{author?.name}</Typography>
                 </Box>
             </StyledInfo>
           </CardContent>

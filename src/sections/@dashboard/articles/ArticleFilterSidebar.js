@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 // @mui
 import {
   Box,
-  Radio,
   Stack,
   Button,
   Drawer,
@@ -12,7 +11,6 @@ import {
   FormGroup,
   IconButton,
   Typography,
-  RadioGroup,
   FormControlLabel,
 } from '@mui/material';
 // components
@@ -35,16 +33,43 @@ ShopFilterSidebar.propTypes = {
   openFilter: PropTypes.bool,
   onOpenFilter: PropTypes.func,
   onCloseFilter: PropTypes.func,
+  fetchArticles: PropTypes.func
 };
 
-export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFilter }) {
+export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFilter, fetchArticles}) {
   
   const [FILTER_SOURCE_OPTIONS, setSourceOptions] = useState([]);
   const [FILTER_CATEGORY_OPTIONS, setCategoryOptions] = useState([]);
+  const [FILTER_AUTHOR_OPTIONS, setAuthorOptions] = useState([]);
+
+  const [CategoryID, setCategoryID] = useState([]);
+  const [SourceID, setSourceID] = useState([]);
+  const [AuthorID, setAuthorID] = useState([]);
+
+  const [isCleared, setIsCleared] = useState(0);
+
+  const onChangeCatigory = (checked, item) => {
+    setCategoryID([item]);
+  };
+
+  const onChangeSource = (checked, item) => {
+    setSourceID([item]);
+  };
+
+  const onChangeAuthor = (checked, item) => {
+    setAuthorID([item]);
+  };
+
+  const clearALL = () => {
+    setCategoryID([]);
+    setSourceID([]);
+    setAuthorID([]);
+    setIsCleared(1);
+  }
 
   useEffect(() => {
     const fetchSourceOptions = async () => {
-      const { data } = await axios.get("/sources/");
+      const { data } = await axios.get("/utils/sources/");
       setSourceOptions(data.data);
     };
     fetchSourceOptions();
@@ -52,12 +77,25 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
   
   useEffect(() => {
     const fetchCategoryOptions = async () => {
-      const { data } = await axios.get("/categories/");
+      const { data } = await axios.get("/utils/categories/");
       setCategoryOptions(data.data);
     };
     fetchCategoryOptions();
   }, []);
 
+  useEffect(() => {
+    const fetchAuthorOptions = async () => {
+      const { data } = await axios.get("/utils/authors/");
+      setAuthorOptions(data.data);
+    };
+    fetchAuthorOptions();
+  }, []);
+
+  useEffect(() => {
+    if(CategoryID.length !== 0 || SourceID.length !== 0 || AuthorID.length !== 0 || isCleared)
+      fetchArticles(CategoryID, SourceID, AuthorID);
+  }, [CategoryID, SourceID, AuthorID]);
+ 
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon="ic:round-filter-list" />} onClick={onOpenFilter}>
@@ -85,15 +123,37 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
-          <div>
+
+            <div>
               <Typography variant="subtitle1" gutterBottom>
-                Category
+              Category
               </Typography>
-              <RadioGroup>
+              <FormGroup>
                 {FILTER_CATEGORY_OPTIONS.map((item) => (
-                  <FormControlLabel key={item.id} value={item.name} control={<Radio />} label={item.name} />
+                  <FormControlLabel key={item.id} value={item.name} control={<Checkbox
+                    checked={CategoryID.includes(item.id)}
+                    onChange={(event) => {
+                      onChangeCatigory(event.target.checked, item.id);
+                    }}
+                  />} label={item.name} />
                 ))}
-              </RadioGroup>
+              </FormGroup>
+            </div>
+
+            <div>
+              <Typography variant="subtitle1" gutterBottom>
+                Author
+              </Typography>
+              <FormGroup>
+                {FILTER_AUTHOR_OPTIONS.map((item) => (
+                  <FormControlLabel key={item.id} value={item.name} control={<Checkbox
+                    checked={AuthorID.includes(item.id)}
+                    onChange={(event) => {
+                      onChangeAuthor(event.target.checked, item.id);
+                    }}  
+                  />} label={item.name} />
+                ))}
+              </FormGroup>
             </div>
 
             <div>
@@ -102,7 +162,12 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
               </Typography>
               <FormGroup>
                 {FILTER_SOURCE_OPTIONS.map((item) => (
-                  <FormControlLabel key={item.id} control={<Checkbox />} label={item.name} />
+                  <FormControlLabel key={item.id} value={item.name} control={<Checkbox
+                    checked={SourceID.includes(item.id)}
+                    onChange={(event) => {
+                      onChangeSource(event.target.checked, item.id);
+                    }}
+                  />} label={item.name} />
                 ))}
               </FormGroup>
             </div>
@@ -117,7 +182,8 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
             type="submit"
             color="inherit"
             variant="outlined"
-            startIcon={<Iconify icon="ic:round-clear-all" />}
+            startIcon={<Iconify icon="ic:round-clear-all"/>}
+            onClick={clearALL}
           >
             Clear All
           </Button>

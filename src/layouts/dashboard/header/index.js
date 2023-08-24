@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import { RequireAuth } from 'react-auth-kit';
-
+import { useIsAuthenticated } from 'react-auth-kit';
+import { Link } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // components
@@ -12,8 +13,6 @@ import Iconify from '../../../components/iconify';
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +45,7 @@ Header.propTypes = {
 };
 
 export default function Header({ onOpenNav }) {
-
+  const isAuthenticated = useIsAuthenticated();
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -73,10 +72,13 @@ export default function Header({ onOpenNav }) {
           }}
         >
           <LanguagePopover />
-          <RequireAuth loginPath={'/login'}>
-            <AccountPopover />
-          </RequireAuth>
-          
+          {isAuthenticated() ? (
+             <AccountPopover />
+          ) : (
+            <LoadingButton component={Link} to="/login" fullWidth size="large" type="submit" variant="contained">
+              Login
+            </LoadingButton>
+          )}
         </Stack>
       </StyledToolbar>
     </StyledRoot>

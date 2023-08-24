@@ -8,7 +8,6 @@ import { Box, Link, Drawer, Typography, Avatar } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 // components
-import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
@@ -38,8 +37,6 @@ export default function Nav({ openNav, onCloseNav }) {
   const auth = useAuthUser();
   const isDesktop = useResponsive('up', 'lg');
   const isAuthenticated = useIsAuthenticated();
-  let user = [user_name => '', user_image => ''];
-  if(isAuthenticated()) user = auth();
 
   useEffect(() => {
     if (openNav) {
@@ -55,20 +52,22 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-
-      <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none">
-        <StyledAccount>
-          <Avatar src={user.user_image} alt="photoURL" />
-          <Box sx={{ ml: 2 }}>
-            <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-              {user.user_name}
-            </Typography>
-          </Box>
-        </StyledAccount>
-        </Link>
-      </Box>
-
+    <Box sx={{ mb: 5, mx: 2.5 }}>
+      <Link underline="none">
+      {isAuthenticated() ? (
+          <StyledAccount>
+            <Avatar src={auth().user_image} alt="photoURL" />
+            <Box sx={{ ml: 2 }}>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                {auth().user_name}
+              </Typography>
+            </Box>
+          </StyledAccount>
+      ) : (
+        ''
+      )}
+      </Link>
+    </Box>
       <NavSection data={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />

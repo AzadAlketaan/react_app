@@ -1,4 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
+import { RequireAuth } from 'react-auth-kit';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -22,7 +23,11 @@ export default function Router() {
         { path: 'app', element: <NewsfeedsPage /> },
         { path: 'newsfeeds', element: <NewsfeedsPage /> },
         { path: 'articles', element: <ArticlePage /> },
-        { path: 'profile', element: <UserProfile /> },
+        { path: 'profile', element: 
+            <RequireAuth loginPath={'/login'}>
+              <UserProfile />
+            </RequireAuth>
+        },
       ],
     },
     {
