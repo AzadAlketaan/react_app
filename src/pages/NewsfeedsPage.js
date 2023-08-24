@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import { Pagination, Container, Stack, Typography } from '@mui/material';
 // components
-import { NewsfeedSort, NewsfeedList, NewsfeedCartWidget } from '../sections/@dashboard/newsfeeds';
+import { NewsfeedList, NewsfeedCartWidget } from '../sections/@dashboard/newsfeeds';
 
 import axios from "../axios-instance";
 import usePagination from "../utils/Pagination";

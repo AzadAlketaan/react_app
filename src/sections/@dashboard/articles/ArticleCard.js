@@ -146,7 +146,7 @@ export default function ArticleCard({ article, index }) {
                 }),
               }}
             >
-              {content}
+              {content ?? title}
             </StyledTitle>
 
             <StyledInfo>

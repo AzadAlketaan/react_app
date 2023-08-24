@@ -7,20 +7,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
-import { ArticleCard, ArticlesSort, ArticlesSearch, ArticleFilterSidebar } from '../sections/@dashboard/articles';
+import { ArticleCard, ArticlesSearch, ArticleFilterSidebar } from '../sections/@dashboard/articles';
 
 import usePagination from "../utils/Pagination";
 
 import axios from "../axios-instance";
-
-// ----------------------------------------------------------------------
-
-const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'popular', label: 'Popular' },
-  { value: 'oldest', label: 'Oldest' },
-];
-
 // ----------------------------------------------------------------------
 
 export default function ArticlePage() {
@@ -104,7 +95,6 @@ export default function ArticlePage() {
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
           <ArticlesSearch articles={ARTICLES} />
-          <ArticlesSort options={SORT_OPTIONS} />
         </Stack>
 
         <Grid container spacing={3}>
